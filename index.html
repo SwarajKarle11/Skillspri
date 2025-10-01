@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentation: AI Voice Agent for Tech News</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;900&display=swap" rel="stylesheet">
+    <style>
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(-45deg, #111827, #1e1b4b, #111827, #083344);
+            background-size: 400% 400%;
+            animation: gradientAnimation 25s ease infinite;
+            color: #F3F4F6;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .presentation-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 5%;
+            text-align: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+            transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            z-index: 10;
+        }
+
+        .nav-controls {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 20;
+        }
+
+        .nav-button {
+            background-color: rgba(31, 41, 55, 0.8);
+            backdrop-filter: blur(10px);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .nav-button:hover {
+            background-color: #4B5563;
+            border-color: #38bdf8;
+            transform: translateY(-2px);
+        }
+        
+        .nav-button:active {
+            transform: translateY(0);
+        }
+        
+        .slide-counter {
+            position: fixed;
+            bottom: 2.5rem;
+            right: 2rem;
+            font-size: 1rem;
+            color: #9CA3AF;
+            z-index: 20;
+            background-color: rgba(17, 24, 39, 0.5);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Outfit', 'Inter', sans-serif;
+            letter-spacing: 0.3px;
+        }
+        h1 {
+            font-size: 4.25rem;
+            font-weight: 900;
+            background: linear-gradient(to right, #38bdf8, #a78bfa);
+            background-clip: text;
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+        }
+
+        h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #E5E7EB;
+            border-bottom: 3px solid #38bdf8;
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        p {
+            font-size: 1.25rem;
+            color: #D1D5DB;
+            max-width: 800px;
+        }
+        
+        .tech-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .tech-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 0 15px rgba(56, 189, 248, 0.4);
+            border-color: rgba(56, 189, 248, 0.8);
+        }
+        
+        .workflow-step {
+            background-color: #1F2937;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid #4B5563;
+             font-size: 0.9rem;
+        }
+        
+        .workflow-arrow {
+            color: #38bdf8;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        audio {
+            width: 80%;
+            max-width: 500px;
+            margin-top: 2rem;
+        }
+        
+        .gemini-button {
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 14px 0 rgba(0, 118, 255, 0.39);
+        }
+        .gemini-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(0, 118, 255, 0.3);
+        }
+        .gemini-button:active {
+            transform: translateY(0);
+        }
+        
+        .gemini-output {
+            background-color: rgba(0,0,0,0.3);
+            backdrop-filter: blur(5px);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            width: 100%;
+            max-width: 800px;
+            height: 150px;
+            overflow-y: auto;
+            text-align: left;
+            font-size: 0.9rem;
+            border: 1px solid #374151;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #38bdf8;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Lightbox styles */
+        .lightbox-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
+        .lightbox-overlay.active { display: flex; }
+        .lightbox-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+        .lightbox-image {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            border: 1px solid #374151;
+        }
+        .lightbox-close {
+            position: absolute;
+            top: -2.25rem;
+            right: -0.5rem;
+            background: rgba(31,41,55,0.9);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.15);
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+
+        <!-- Slide 1: Title & Objective -->
+        <div class="slide active" id="slide-1">
+            <p class="text-sky-400 font-bold mb-2">A Project by Team Codeify</p>
+            <h1 class="text-5xl">AI Voice Agent for Tech News</h1>
+            <div class="mt-8 border-t border-gray-700 w-full max-w-4xl pt-8">
+                <h3 class="text-2xl font-bold text-gray-200 mb-4">Project Objective</h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="tech-card text-center"><h4 class="font-bold text-cyan-300">🎙️ Synthesize & Deliver</h4></div>
+                    <div class="tech-card text-center"><h4 class="font-bold text-cyan-300">📞 Proactive Calling</h4></div>
+                    <div class="tech-card text-center"><h4 class="font-bold text-cyan-300">💰 Cost-Effective</h4></div>
+                    <div class="tech-card text-center"><h4 class="font-bold text-cyan-300">⚙️ Easy Customization</h4></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: How It Works -->
+        <div class="slide" id="slide-2">
+            <h2>How It Works: Tech & Workflow</h2>
+            <div class="flex flex-col lg:flex-row gap-8 w-full max-w-7xl items-start">
+                <!-- Tech Stack -->
+                <div class="w-full lg:w-1/3">
+                    <h3 class="text-xl font-bold mb-4 text-purple-400">Technology Stack</h3>
+                    <div class="space-y-3">
+                        <div class="tech-card text-left p-3"><h4 class="font-bold">Pipedream MCP & OpenAI</h4><p class="text-sm text-gray-400">For backend automation and content generation.</p></div>
+                        <div class="tech-card text-left p-3">
+                            <h4 class="font-bold">Twilio</h4>
+                            <p class="text-sm text-gray-400">Outbound call integration.</p>
+                            <img src="Twilio.png" class="mt-2 rounded-md border border-gray-600 shadow-lg"/>
+                        </div>
+                        <div class="tech-card text-left p-3">
+                            <h4 class="font-bold">ElevenLabs API</h4>
+                            <p class="text-sm text-gray-400">Realistic AI voice synthesis.</p>
+                             <img src="Eleven labs.png" class="mt-2 rounded-md border border-gray-600 shadow-lg"/>
+                        </div>
+                    </div>
+                </div>
+                <!-- Workflow -->
+                <div class="w-full lg:w-2/3">
+                     <h3 class="text-xl font-bold mb-4 text-purple-400">Live Workflow Screenshots</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                        <div>
+                            <p class="text-sm font-bold mb-1">1. Create Agent via Prompt</p>
+                            <img src="1.png" class="enlargeable rounded-lg shadow-lg border-2 border-gray-700 w-full cursor-zoom-in transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl">
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold mb-1">2. Initiate Outbound Call</p>
+                            <img src="2.png" class="enlargeable rounded-lg shadow-lg border-2 border-gray-700 w-full cursor-zoom-in transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl">
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold mb-1">3. Call Successfully Placed</p>
+                            <img src="3.png" class="enlargeable rounded-lg shadow-lg border-2 border-gray-700 w-full cursor-zoom-in transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Features & Live Demo -->
+        <div class="slide" id="slide-3">
+            <h2>Features & Live Demo</h2>
+             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 max-w-4xl mb-6">
+                <div class="tech-card"><h3 class="font-bold text-cyan-300">Real-Time Voice</h3></div>
+                <div class="tech-card"><h3 class="font-bold text-cyan-300">Cost-Effective</h3></div>
+                <div class="tech-card"><h3 class="font-bold text-cyan-300">Modular Prompts</h3></div>
+                <div class="tech-card"><h3 class="font-bold text-cyan-300">Low-Code Backend</h3></div>
+            </div>
+            <p class="text-lg">Listen to the AI voice agent in action.</p>
+            <audio controls>
+                <source src="https://res.cloudinary.com/dtaubbior/video/upload/v1753385983/WhatsApp_Audio_2025-07-25_at_1.09.03_AM_q2ujli.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <!-- Slide 4: The Road Ahead -->
+        <div class="slide" id="slide-4">
+            <h2>The Road Ahead</h2>
+            <div class="flex flex-col md:flex-row gap-8 items-center justify-center max-w-5xl mx-auto">
+                <div class="text-left w-full md:w-2/3 mx-auto">
+                    <ul class="list-disc list-inside space-y-4 text-lg">
+                        <li><span class="font-bold text-sky-400">Interactive Conversations:</span> Add speech-to-text to allow users to talk back.</li>
+                        <li><span class="font-bold text-sky-400">Scheduled Briefings:</span> Implement a feature for users to schedule daily or weekly calls.</li>
+                        <li><span class="font-bold text-sky-400">Automated Content:</span> Integrate with RSS feeds or news APIs for automatic content generation.</li>
+                        <li><span class="font-bold text-sky-400">Feedback Loop:</span> Log call reports and user feedback to improve the service.</li>
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- Slide 5: Summary & Q&A -->
+        <div class="slide" id="slide-5">
+            <h1 class="text-6xl mb-4">Thank You</h1>
+            <div class="w-full max-w-4xl border-t border-gray-700 pt-6">
+                <h2 class="text-2xl border-none mb-2">Summary & Impact</h2>
+                <p class="max-w-3xl mx-auto mb-4 text-base">
+                    This project is a successful prototype for personalized news, domain-specific voice assistants, and low-cost customer engagement, creatively integrating voice AI and telephony with free-tier cloud tools.
+                </p>
+                
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="nav-controls">
+        <button id="prevBtn" class="nav-button">← Prev</button>
+        <button id="nextBtn" class="nav-button">Next →</button>
+    </div>
+    
+    <div id="slideCounter" class="slide-counter">1 / 5</div>
+
+    <!-- Lightbox Modal -->
+    <div id="lightboxOverlay" class="lightbox-overlay" aria-hidden="true">
+        <div class="lightbox-content">
+            <button id="lightboxClose" class="lightbox-close" aria-label="Close">×</button>
+            <img id="lightboxImage" class="lightbox-image" src="" alt="Enlarged view" />
+        </div>
+    </div>
+
+
+    <script>
+        // --- Slide Navigation Logic ---
+        let currentSlide = 1;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const slideCounter = document.getElementById('slideCounter');
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            const newSlide = document.getElementById(`slide-${n}`);
+            if (newSlide) {
+                newSlide.classList.add('active');
+            }
+            slideCounter.textContent = `${n} / ${totalSlides}`;
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', nextSlide);
+        document.getElementById('prevBtn').addEventListener('click', prevSlide);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        showSlide(currentSlide);
+
+        // --- Lightbox Logic ---
+        const enlargeableImages = document.querySelectorAll('.enlargeable');
+        const lightboxOverlay = document.getElementById('lightboxOverlay');
+        const lightboxImage = document.getElementById('lightboxImage');
+        const lightboxClose = document.getElementById('lightboxClose');
+
+        function openLightbox(src) {
+            lightboxImage.src = src;
+            lightboxOverlay.classList.add('active');
+            lightboxOverlay.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeLightbox() {
+            lightboxOverlay.classList.remove('active');
+            lightboxOverlay.setAttribute('aria-hidden', 'true');
+            lightboxImage.src = '';
+        }
+
+        enlargeableImages.forEach(img => {
+            img.addEventListener('click', () => openLightbox(img.src));
+        });
+
+        lightboxOverlay.addEventListener('click', (e) => {
+            if (e.target === lightboxOverlay) {
+                closeLightbox();
+            }
+        });
+        lightboxClose.addEventListener('click', closeLightbox);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+    </script>
+</body>
+</html>
